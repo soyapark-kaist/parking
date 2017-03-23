@@ -1,0 +1,116 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+<script src='https://www.gstatic.com/firebasejs/3.0.3/firebase.js'></script>
+<title>Firebase + Cloud Vision Stream</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var imagesList = document.getElementById('images'),
+      textInput = document.getElementById('text'),
+      sendButton = document.getElementById('send'),
+      file = document.getElementById('file');
+
+  // Set up Firebase Config
+  // TODO: get values from console.firebase.google.com
+  var config = {
+      apiKey: "AIzaSyD9v41gd511lFHseGqCXwNyfpQyArNgZLQ",
+        authDomain: "hello-3239c.firebaseapp.com",
+        databaseURL: "https://hello-3239c.firebaseio.com",
+        storageBucket: "hello-3239c.appspot.com",
+        messagingSenderId: "785081542704"
+    };
+
+  // Initilize Firebase App, get DB and Storage services
+  var app = firebase.initializeApp(config),
+      database = app.database(),
+      storage = app.storage();
+
+  // Handle file uploads to Storage
+  function handleFileSelect(e) {
+    e.preventDefault();
+    var files = e.target.files,
+      i, file;
+    for (i=0; file=files[i]; i++) {
+      var metadata = {
+        'contentType': file.type,
+      };
+      var uploadTask = storage.ref().child('images/' + generateFilename(5)).put(file, metadata);
+      uploadTask.on('state_changed', null, function(error) {
+        alert('Upload failed:', error)
+        console.log('Upload failed:', error)
+      }, function() {
+        // TODO push to DB for meta data with location.  
+        alert('Upload succeeded!')
+      }.bind(uploadTask));
+    }
+    return false;
+  }
+
+  function generateFilename(inLength) {
+    var text = [new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()].join("-");
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < inLength; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+  }
+
+  file.addEventListener('change', handleFileSelect, false);
+
+  // Handle new images added to the Database
+  // storage.ref().child('images').getDownloadURL().then(function(url) {
+  //     // `url` is the download URL for 'images/stars.jpg'
+
+  //     // This can be downloaded directly:
+  //     var xhr = new XMLHttpRequest();
+  //     xhr.responseType = 'blob';
+  //     xhr.onload = function(event) {
+  //         var blob = xhr.response;
+  //     };
+  //     xhr.open('GET', url);
+  //     xhr.send();
+
+  //     // Or inserted into an <img> element:
+  //     var img = document.getElementById('myimg');
+  //     img.src = url;
+  // }).catch(function(error) {
+  //     // Handle any errors
+  // });
+
+
+/*
+  on('value', function(snapshot) {
+    data = snapshot.val()
+    var labelString = '';
+    for (var i = 0; i < data.labels.length; i++) {
+      label = data.labels[i];
+      miniString = label.desc + ' ' + label.score + '%<br/>';
+      labelString += miniString + ' ';
+    }
+    var li = document.createElement('li');
+    li.innerText = labelString;
+    li.innerHTML = '<img src="' + data.url + '" width="320px" height="auto"/><br/>' + labelString;
+    imagesList.appendChild(li);
+  });
+*/
+});
+
+</script>
+</head>
+<body>
+  <h1>Uploader UI demo</h1>
+  <br>
+  <h2>자동차 번호판의 사진을 올려주세요.</h2>
+  <p>실시간 불법주차에 대한 수집이기 때문에 불법주차 차량을 발견 후 그 장소에서 즉시 올려주세요.</p>
+  <p>한 사진당 한 번호판만 나오게 찍어주세요.</p>
+  <p>번호판에 있는 글씨 외에는 다른 글씨가 안 보이게 찍어주세요.</p>
+  예시) <img width="200" src="img/1.jpg"/>
+  <img width="200" src="img/2.jpg"/>
+  <ul id='images'></ul>
+  <div id='footer'>
+    <input type="file" id="file" name="file" />
+  </div>
+</body>
+</html>
