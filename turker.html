@@ -21,7 +21,7 @@
     <script src="app.js"></script>
     <script type="text/javascript" src="key.js"></script>
     <!--<script type="text/javascript" src="main.js"></script>-->
-    <script type="text/javascript" src="main2.js"></script>
+    <script type="text/javascript" src="main.js"></script>
 </head>
 
 <body>
@@ -29,17 +29,14 @@
     <br>
     <img style="width: 300px;" id="myimg" />
     <h2>=</h2>
-    <code style="white-space:pre" id="results"></code>
+    <p id="results"></p>
     <button class="correct" onclick="correctPlate()">Correct</button>
     <form class="wrong" onsubmit="return updatePlate();">
         <button type="submit">Wrong</button>
         <input type="text" required/>
     </form>
 
-    <form id="fileform">
-        <button type="submit">Wrong</button>
-    </form>
-
+    <p>* 아직 로그인 기능을 추가하지 않은 상태여서 새로고침을 하면 사용자가 같은 문제를 볼 수 있지만, 로그인 기능을 추가해 같은 문제 보는 것을 피할 수 있음. </p>
 </body>
 
 </html>
