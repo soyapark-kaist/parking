@@ -24,11 +24,14 @@ $(function() {
     playersRef.once("value").then(function(snapshot) {
         var imgs = snapshot.val();
 
-        for (var o in imgs) {
-            if (imgs[o].status == 2) continue;
+        for (var o in imgs) { //date
+            for (var c in imgs[o]) {
+                if (imgs[o][c].status == 2) continue;
 
 
-            questions.push({ id: o, data: imgs[o] });
+                questions.push({ id: o + "/" + c, data: imgs[o][c] });
+            }
+
             //remember this index and resume with index+1
         }
 
@@ -37,7 +40,6 @@ $(function() {
 });
 
 function fetchQuestion() {
-    debugger;
     var q = questions.shift();
     currentImg = q.id;
     var storageRef = storage.ref();
