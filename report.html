@@ -40,7 +40,7 @@
 
     <script type="text/javascript" src="js/app.js"></script>
     <script type="text/javascript" src="js/key.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/report.js"></script>
 </head>
 
 <body>
@@ -73,32 +73,19 @@
 
                 <div class="page-header">
                     <h2>
-                        <i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i> 번호판 검증
+                        <i class="fa fa-car fa-2x" aria-hidden="true"></i> 불법주차 신고하기
                     </h2>
                 </div>
-                <div class="row">
-                    <div class="col-xs-5">
-                        <img style="width: 200px;" id="myimg" />
-                    </div>
-                    <div class="col-xs-2">
-                        <h2>=</h2>
-                    </div>
-                    <div class="col-xs-5">
-                        <h3 id="results"></h3>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6" style="text-align: center;">
-                        <button class="btn btn-success btn-lg correct" onclick="correctPlate()">Correct</button>
-                    </div>
-                    <div class="col-xs-6" style="text-align: center;">
-                        <form class="wrong" onsubmit="return updatePlate();">
-                            <button class="btn btn-danger btn-lg" type="submit">Wrong</button>
-                            <input type="text" placeholder="정답 입력" required/>
-                        </form>
-                    </div>
-
-
+                <h3>자동차 번호판의 사진을 올려주세요.</h3>
+                <p>실시간 불법주차에 대한 수집이기 때문에 불법주차 차량을 발견 후 그 장소에서 즉시 올려주세요.</p>
+                <p>한 사진당 한 번호판만 나오게 찍어주세요.</p>
+                <p>번호판에 있는 글씨 외에는 다른 글씨가 안 보이게 찍어주세요.</p>
+                예시) <img height="150" src="img/1.jpg" />
+                <img height="150" src="img/2.jpg" />
+                <ul id='images'></ul>
+                <div id='footer'>
+                    <input type="file" id="file" name="file" />
+                    <div class="loading"></div>
                 </div>
             </div>
         </div>

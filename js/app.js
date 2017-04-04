@@ -12,3 +12,8 @@ var config = {
 var app = firebase.initializeApp(config),
     database = app.database(),
     storage = app.storage();
+
+
+function toggleLoading(inSelector) {
+    $(inSelector).toggleClass("loader");
+}

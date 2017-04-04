@@ -40,10 +40,11 @@ $(function() {
 });
 
 function fetchQuestion() {
+    $(".wrong input").val("");
     var q = questions.shift();
     currentImg = q.id;
     var storageRef = storage.ref();
-    var imgRef = storageRef.child('images/' + q.id);
+    var imgRef = storageRef.child(q.id);
     // call .then() on the promise returned to get the value
     imgRef.getDownloadURL().then(function(url) {
 
