@@ -14,6 +14,9 @@ var app = firebase.initializeApp(config),
     storage = app.storage();
 
 
-function toggleLoading(inSelector) {
-    $(inSelector).toggleClass("loader");
+function toggleLoading(inSelector, inShow) {
+    if (inShow)
+        $(inSelector).addClass("loader");
+
+    else $(inSelector).removeClass("loader");
 }

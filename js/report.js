@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle file uploads to Storage
     function handleFileSelect(e) {
-        toggleLoading(".loading");
+        toggleLoading(".loading", true);
         e.preventDefault();
 
         // Try HTML5 geolocation.
@@ -23,20 +23,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     var files = e.target.files,
                         i, file;
                     for (i = 0; file = files[i]; i++) {
-                        var metadata = {
-                            'contentType': file.type,
-                        };
-                        var fileName = generateFilename(5);
-                        var uploadTask = storage.ref().child([new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()].join("-") + "/" + fileName).put(file, metadata);
+                        //Only pics
+                        if (!file.type.match('image')) {
+                            alert("이미지만 업로드할 수 있습니다!");
+                            return;
+                        }
 
-                        uploadTask.on('state_changed', null, function(error) {
-                            alert('Upload failed:', error)
-                            console.log('Upload failed:', error)
-
-                        }, function() {
-                            logPicture(fileName);
-                        }.bind(uploadTask));
+                        fileArray.push({ "file": file, "id": generateFilename(5) });
                     }
+
+                    storePicture(fileArray[0].file, 0, fileArray.length);
 
                 },
                 function() { //error callback
@@ -61,9 +57,41 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
     }
 
-    function logPicture(inFilename) {
+    var fileArray = [];
+
+    function storePicture(file, inIndex, inLength) {
+        if (inIndex == inLength) {
+            logPicture(fileArray[0].id, 0, fileArray.length);
+            return;
+        }
+
+        var metadata = {
+            'contentType': file.type,
+        };
+
+        var uploadTask = storage.ref().child([new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()].join("-") + "/" + fileArray[inIndex].id).put(file, metadata);
+
+        uploadTask.on('state_changed', null, function(error) {
+            alert('Upload failed:', error)
+            console.log('Upload failed:', error)
+        }, function() {
+            console.log("here");
+            storePicture(++inIndex < inLength ? fileArray[inIndex].file : null, inIndex, inLength);
+            // logPicture(fileName);
+        }.bind(uploadTask));
+    }
+
+    function logPicture(inFilename, inIndex, inLength) {
+        if (inIndex == inLength) {
+            alert('Upload succeeded!');
+            toggleLoading(".loading", false);
+
+            return;
+        }
+
         var pRef = firebase.database().ref("images/" + [new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()].join("-") + "/" + inFilename);
 
+        var datas = [];
         pRef.set({
             "latitude": center.lat,
             "longitude": center.lng,
@@ -75,10 +103,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(error);
             } else {
                 // when post to DB is successful 
-                alert('Upload succeeded!');
-                toggleLoading(".loading");
+                logPicture(++inIndex < inLength ? fileArray[inIndex].id : null, inIndex, inLength);
             }
-
         });
 
     }
@@ -93,5 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return text;
     }
 
-    file.addEventListener('change', handleFileSelect, false);
+    if (window.File && window.FileList && window.FileReader)
+        file.addEventListener('change', handleFileSelect, false);
+    else alert("해당 브러우저에서 지원되지 않습니다");
 });
