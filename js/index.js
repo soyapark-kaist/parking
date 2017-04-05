@@ -1,4 +1,6 @@
 function createMap() {
+    $(".loading").toggleClass("loader");
+
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 15
     });
@@ -7,7 +9,6 @@ function createMap() {
         lat: 36.371,
         lng: 127.3624
     });
-
 
 
     drawStreetLine();
@@ -63,7 +64,7 @@ function createMap() {
             infoWindow.setPosition(locations[l]);
         }
 
-
+        $(".loading").toggleClass("loader");
     });
 }
 
