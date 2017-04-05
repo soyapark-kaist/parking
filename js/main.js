@@ -38,6 +38,7 @@ $(function() {
         if (questions.length == 0) {
             alert("현재 겸증할 차량이 없습니다!");
             toggleLoading(".loading", false);
+            window.location.replace("./index.html");
         }
 
         fetchQuestion();
@@ -131,7 +132,7 @@ function sendFileToCloudVision(inUrl) {
                     var v_normal = /[^0-9가-힣]/g;
                     parsedText = parsedText.replace(v_normal, '');
                     console.log(parsedText);
-                    $('#results').text(parsedText);
+                    $('#results').text(parsedText == "" ? "?" : parsedText);
 
                     var textOverlay = value["TextOverlay"];
                     var pageText = '';

@@ -95,3 +95,12 @@ function drawStreetLine() {
         flightPath.setMap(map);
     }
 }
+
+var trackOutboundLink = function(url, inCategory) {
+    ga('send', 'event', inCategory, 'click', url, {
+        'transport': 'beacon',
+        'hitCallback': function() {
+            document.location = url;
+        }
+    });
+}
