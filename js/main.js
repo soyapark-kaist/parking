@@ -35,6 +35,11 @@ $(function() {
             //remember this index and resume with index+1
         }
 
+        if (questions.length == 0) {
+            alert("현재 겸증할 차량이 없습니다!");
+            toggleLoading(".loading", false);
+        }
+
         fetchQuestion();
     });
 });
