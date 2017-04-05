@@ -124,8 +124,9 @@ function sendFileToCloudVision(inUrl) {
                     var errorDetails = value["ErrorDetails"];
 
                     var v_normal = /[^0-9가-힣]/g;
+                    parsedText = parsedText.replace(v_normal, '');
                     console.log(parsedText);
-                    $('#results').text(parsedText.replace(v_normal, ''));
+                    $('#results').text(parsedText);
 
                     var textOverlay = value["TextOverlay"];
                     var pageText = '';

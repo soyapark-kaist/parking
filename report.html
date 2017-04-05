@@ -79,6 +79,23 @@
                 </div>
                 <span class="label label-success">차량 한 대당 2점</span>
                 <h3>자동차 번호판의 사진을 올려주세요.</h3>
+
+                <div class="row">
+                    <div class="col-sm-5">
+                        <!--현재 위치-->
+                        <h4>현재 위치?</h4>
+                        <p id="loc-msg"></p>
+                        <div class="building-list-container">
+                            <table class="building-list table table-hover" style="margin-top: 15px;">
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <div id="map"></div>
+                    </div>
+                </div>
+
                 <p>실시간 불법주차에 대한 수집이기 때문에 불법주차 차량을 발견 후 그 장소에서 즉시 올려주세요.</p>
                 <p>한 사진당 한 번호판만 나오게 찍어주세요.</p>
                 <p>번호판에 있는 글씨 외에는 다른 글씨가 안 보이게 찍어주세요.</p>
@@ -112,6 +129,8 @@
             </ul>
         </div>
     </footer>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCByCLtjJ9BAR29-HXHHDBU8DWCyyuA_CE&callback=createMap">
+    </script>
 </body>
 
 </html>

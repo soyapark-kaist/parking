@@ -1,4 +1,59 @@
 var center;
+var markers;
+
+function createMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15
+    });
+
+    map.setCenter({
+        lat: 36.371,
+        lng: 127.3624
+    });
+
+    var infoWindow = new google.maps.InfoWindow({
+        map: map
+    });
+    infoWindow.close();
+
+    drawStreetLine();
+
+    var locations = [
+        { lat: 36.368443, lng: 127.361919 },
+        { lat: 36.371354, lng: 127.358271 },
+        { lat: 36.366761, lng: 127.357136 },
+        { lat: 36.373427, lng: 127.359050 },
+        { lat: 36.373452, lng: 127.365332 }
+    ];
+    var streetName = ['중앙로', '노천극장', '엔드리스로드', '북측 기숙사 앞', '후문'];
+
+    function nextChar(c) {
+        return String.fromCharCode(c.charCodeAt(0) + 1);
+    }
+
+    var alphabet = 'A';
+
+    //markmap
+    markers = locations.map(function(location, i) {
+        var marker = new google.maps.Marker({
+            position: location,
+            label: alphabet
+        });
+
+        appendRow(alphabet, streetName[i], i);
+
+        alphabet = nextChar(alphabet);
+
+        return marker;
+    });
+
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setOptions({
+            map: map,
+            visible: true
+        });
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     // Check whether the user is authenticated
@@ -25,47 +80,20 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleLoading(".loading", true);
         e.preventDefault();
 
-        // Try HTML5 geolocation.
-        if ("geolocation" in navigator) {
-            // var location_timeout = setTimeout("alert('브라우저의 위치정보 수집이 불가합니다. 설정에서 승인 후 다시 시도해주세요.');", 10000);
-            navigator.geolocation.getCurrentPosition(function(position) {
-                    center = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
 
-                    var files = e.target.files,
-                        i, file;
-                    for (i = 0; file = files[i]; i++) {
-                        //Only pics
-                        if (!file.type.match('image')) {
-                            alert("이미지만 업로드할 수 있습니다!");
-                            return;
-                        }
+        var files = e.target.files,
+            i, file;
+        for (i = 0; file = files[i]; i++) {
+            //Only pics
+            if (!file.type.match('image')) {
+                alert("이미지만 업로드할 수 있습니다!");
+                return;
+            }
 
-                        fileArray.push({ "file": file, "id": generateFilename(5) });
-                    }
-
-                    storePicture(fileArray[0].file, 0, fileArray.length);
-
-                },
-                function() { //error callback
-                    // clearTimeout(location_timeout);
-                    $('#submitSection').text('disabled');
-                    console.log("Error geolocation");
-                    alert('브라우저의 위치정보 수집이 불가합니다. 설정에서 승인 후 다시 시도해주세요.');
-                    // handleLocationError(true, infoWindow, map.getCenter());
-                }, {
-                    timeout: 10000
-                });
-
-
-        } else {
-            // Browser doesn't support Geolocation
-            console.log("Error geolocation; brower doesn't support");
-            alert('브라우저의 위치정보 수집이 불가합니다. 다른 브라우저에서 다시 시도해주세요.');
-            // handleLocationError(false, infoWindow, map.getCenter());
+            fileArray.push({ "file": file, "id": generateFilename(5) });
         }
+
+        storePicture(fileArray[0].file, 0, fileArray.length);
 
 
         return false;
@@ -79,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        incrementPoints(3);
+        incrementPoints(2);
 
         var metadata = {
             'contentType': file.type,
@@ -109,8 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var datas = [];
         pRef.set({
-            "latitude": center.lat,
-            "longitude": center.lng,
+            "location": $('.building-list tr.warning').attr("street"),
             "status": -1,
             "text": "",
             "time": new Date().toString()
@@ -139,3 +166,35 @@ document.addEventListener('DOMContentLoaded', function() {
         file.addEventListener('change', handleFileSelect, false);
     else alert("해당 브러우저에서 지원되지 않습니다");
 });
+
+function appendRow(inID, inStreet, cnt) {
+    $('.building-list tbody').append(
+        '<tr street=' + cnt + '>\
+            <td>#' + inID + '</td>\
+            <td>' + inStreet + '</td>\
+            <td><button class="btn btn-default" onclick="animateMarker(' + (cnt) + ')">선택</button></td> \
+          </tr>'
+    );
+}
+
+var preIndex = -1;
+
+function animateMarker(index) {
+    if (preIndex != -1) {
+        markers[preIndex].setAnimation(null);
+        $(".building-list tr button").eq(preIndex).text("선택");
+    }
+
+
+    $(".building-list tr").removeClass("warning");
+    $(".building-list tr").eq(index).addClass("warning");
+    $(".building-list tr button").eq(index).text("선택됨");
+
+    preIndex = index;
+
+    if (markers[index].getAnimation() != google.maps.Animation.BOUNCE) {
+        markers[index].setAnimation(google.maps.Animation.BOUNCE);
+    } else {
+        markers[index].setAnimation(null);
+    }
+}
