@@ -26,7 +26,7 @@ $(function() {
 
         for (var o in imgs) { //date
             for (var c in imgs[o]) {
-                if (imgs[o][c].status == 2) continue;
+                if (imgs[o][c].status == 2 || imgs[o][c].status == -2) continue;
 
 
                 questions.push({ id: o + "/" + c, data: imgs[o][c] });
@@ -201,6 +201,27 @@ function updatePlate(inValue) {
         "status": 0,
         "text": inValue ? inValue : $(".wrong  input").val(),
         "time": new Date().toString()
+    }, function(error) {
+        if (error) {
+            console.log(error);
+        } else {
+            debugger;
+            incrementPoints(1);
+
+            alert("다음 문제로 넘어갑니다");
+            fetchQuestion();
+            // go to next question. 
+        }
+    });
+
+    return false;
+}
+
+function faultPlate() {
+    var pRef = firebase.database().ref("images/" + currentImg);
+
+    pRef.update({
+        "status": -2,
     }, function(error) {
         if (error) {
             console.log(error);

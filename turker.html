@@ -81,7 +81,7 @@
                 <div class="loading"></div>
                 <div class="row">
                     <div class="col-xs-6">
-                        <img style="width: 120px;" id="myimg" />
+                        <img style="width: 100%;" id="myimg" />
                     </div>
                     <div class="col-xs-2">
                         <h2>=</h2>
@@ -97,26 +97,25 @@
                     <div class="col-xs-6" style="text-align: center;">
                         <form class="wrong" onsubmit="return updatePlate();">
                             <button class="btn btn-danger btn-lg" type="submit">Wrong</button>
-                            <input type="text" placeholder="정답 입력" required/>
+                            <input type="text" class="form-control" placeholder="예)12가3456" required/>
                         </form>
                     </div>
                 </div>
-                <br><br><br> 차량 번호판 사진이 아닐 때, <button type="button" class="btn btn-warning">사진 신고</button>
+                <br><br><br> 차량 번호판 사진이 아닐 때, <button onclick="faultPlate()" type="button" class="btn btn-warning ">사진 신고</button>
             </div>
         </div>
     </div>
 
     <footer>
-        <div class="container">
-            <ul class="footer-links right-links">
-                <li><a href="mailto:kixlab.rally@gmail.com">contact</a></li>
-                <li><a href="./privacy.html">privacy</a></li>
+        <div class="container ">
+            <ul class="footer-links right-links ">
+                <li><a href="mailto:kixlab.rally@gmail.com ">contact</a></li>
+                <li><a href="./privacy.html ">privacy</a></li>
                 <li>ver 0.1</li>
             </ul>
-            <ul class="footer-links">
-                <li>© 2017 KIXLAB</li>
-                <li><a href="https://kixlab.org">KIXLAB</a></li>
-                <li><a href="https://student.kaist.ac.kr/">학부총학생회</a></li>
+            <ul class="footer-links ">
+                <li>© 2017 학부총학생회</li>
+                <li><a href="https://student.kaist.ac.kr/ ">학부총학생회</a></li>
             </ul>
         </div>
     </footer>

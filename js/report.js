@@ -55,10 +55,16 @@ function createMap() {
     }
 }
 
+function checkLocation(e) {
+    if ($('.building-list tr.warning').length == 0) {
+        alert("현재 위치 선택을 먼저 해주세요!");
+        e.preventDefault();
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Check whether the user is authenticated
     firebase.auth().onAuthStateChanged(function(user) {
-        debugger;
         if (user) {
             $("#footer").show();
             $("#login-btn").hide();
@@ -75,14 +81,15 @@ document.addEventListener('DOMContentLoaded', function() {
         sendButton = document.getElementById('send'),
         file = document.getElementById('file');
 
+    var files;
+
     // Handle file uploads to Storage
     function handleFileSelect(e) {
-        toggleLoading(".loading", true);
+        $(".loading").toggleClass("loader");
         e.preventDefault();
 
-
-        var files = e.target.files,
-            i, file;
+        files = e.target.files;
+        var i, file;
         for (i = 0; file = files[i]; i++) {
             //Only pics
             if (!file.type.match('image')) {
@@ -90,16 +97,84 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            fileArray.push({ "file": file, "id": generateFilename(5) });
         }
 
-        storePicture(fileArray[0].file, 0, fileArray.length);
+        processfile(files[0], 0, files.length);
+        // fileArray.push({ "file": file, "id": generateFilename(5) });
+
+        // storePicture(fileArray[0].file, 0, fileArray.length);
 
 
         return false;
     }
 
     var fileArray = [];
+
+    function processfile(file, inIndex, inLength) {
+        if (inIndex == inLength) {
+            storePicture(fileArray[0].file, 0, fileArray.length);
+            return;
+        }
+
+        // read the files
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+
+        reader.onload = function(event) {
+            // blob stuff
+            var blob = new Blob([event.target.result]); // create blob...
+            window.URL = window.URL || window.webkitURL;
+            var blobURL = window.URL.createObjectURL(blob); // and get it's URL
+
+            // helper Image object
+            var image = new Image();
+            image.src = blobURL;
+            //preview.appendChild(image); // preview commented out, I am using the canvas instead
+            image.onload = function() {
+                // have to wait till it's loaded
+                var resized = resizeMe(image); // send it to canvas
+                fileArray.push({ "file": resized, "id": generateFilename(5) });
+                processfile(++inIndex < inLength ? files[inIndex] : null, inIndex, inLength);
+            }
+        };
+    }
+
+    var max_width = 250;
+    var max_height = 250;
+
+    function resizeMe(img) {
+
+        var canvas = document.createElement('canvas');
+
+        var width = img.width;
+        var height = img.height;
+
+        // calculate the width and height, constraining the proportions
+        if (width > height) {
+            if (width > max_width) {
+                //height *= max_width / width;
+                height = Math.round(height *= max_width / width);
+                width = max_width;
+            }
+        } else {
+            if (height > max_height) {
+                //width *= max_height / height;
+                width = Math.round(width *= max_height / height);
+                height = max_height;
+            }
+        }
+
+        // resize the canvas and draw the image data into it
+        canvas.width = width;
+        canvas.height = height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        preview.appendChild(canvas); // do the actual resized preview
+
+        return canvas.toDataURL("image/jpeg", 0.7); // get the data from canvas as 70% JPG (can be also PNG, etc.)
+
+    }
 
     function storePicture(file, inIndex, inLength) {
         if (inIndex == inLength) {
@@ -113,22 +188,27 @@ document.addEventListener('DOMContentLoaded', function() {
             'contentType': file.type,
         };
 
-        var uploadTask = storage.ref().child([new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()].join("-") + "/" + fileArray[inIndex].id).put(file, metadata);
+        var uploadTask = storage.ref().child([new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()].join("-") + "/" + fileArray[inIndex].id);
 
-        uploadTask.on('state_changed', null, function(error) {
-            alert('Upload failed:', error)
-            console.log('Upload failed:', error)
-        }, function() {
-            console.log("here");
+        uploadTask.putString(file, 'data_url').then(function(snapshot) {
             storePicture(++inIndex < inLength ? fileArray[inIndex].file : null, inIndex, inLength);
-            // logPicture(fileName);
-        }.bind(uploadTask));
+        });
+
+        // uploadTask.on('state_changed', null, function(error) {
+        //     alert('Upload failed:', error)
+        //     console.log('Upload failed:', error)
+        // }, function() {
+        //     console.log("here");
+        //     storePicture(++inIndex < inLength ? fileArray[inIndex].file : null, inIndex, inLength);
+        //     // logPicture(fileName);
+        // }.bind(uploadTask));
     }
 
     function logPicture(inFilename, inIndex, inLength) {
         if (inIndex == inLength) {
-            alert('Upload succeeded!');
-            toggleLoading(".loading", false);
+            alert('신고 되었습니다!');
+            $(".loading").toggleClass("loader");
+            window.location.replace("./report.html");
 
             return;
         }
@@ -165,6 +245,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (window.File && window.FileList && window.FileReader)
         file.addEventListener('change', handleFileSelect, false);
     else alert("해당 브러우저에서 지원되지 않습니다");
+
+    file.addEventListener('click', checkLocation, false);
 });
 
 function appendRow(inID, inStreet, cnt) {

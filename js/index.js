@@ -8,10 +8,7 @@ function createMap() {
         lng: 127.3624
     });
 
-    var infoWindow = new google.maps.InfoWindow({
-        map: map
-    });
-    infoWindow.close();
+
 
     drawStreetLine();
 
@@ -29,57 +26,45 @@ function createMap() {
 
         tableRows = tableRows.sort(function(a, b) { return (a.point < b.point) ? 1 : ((b.point < a.point) ? -1 : 0); });
 
-        for (var t in tableRows)
+        for (var t in tableRows) {
             appendRow(cnt++, tableRows[t].email, tableRows[t].point);
+            if (cnt == 7) break;
+        }
 
     });
 
-    // var playersRef = firebase.database().ref('images/');
-    // // Attach an asynchronous callback to read the data at our posts reference
-    // playersRef.once("value").then(function(snapshot) {
-    //     var imgs = snapshot.val();
-    //     var locations = [];
+    var playersRef = firebase.database().ref('images/');
+    // Attach an asynchronous callback to read the data at our posts reference
+    playersRef.once("value").then(function(snapshot) {
+        var imgs = snapshot.val();
+        var locationCnt = [0, 0, 0, 0, 0];
 
-    //     for (var o in imgs) {
-    //         if (imgs[o].status != 2) continue;
-    //         currentImg = o;
+        for (var o in imgs) {
+            for (var i in imgs[o]) {
+                if (imgs[o][i].status != 2) continue;
 
-    //         locations.push({
-    //             'lat': imgs[o].latitude,
-    //             'lng': imgs[o].longitude,
-    //             'text': imgs[o].text
-    //         })
-    //     }
+                locationCnt[imgs[o][i].location]++;
+            }
+        }
 
-    //     //markmap
-    //     var markers = locations.map(function(location, i) {
-    //         var image = {
-    //             url: 'img/car.ico',
-    //             scaledSize: new google.maps.Size(30, 30)
-    //         };
-    //         var marker = new google.maps.Marker({
-    //             position: location,
-    //             icon: image,
-    //             text: location.text
-    //         });
+        var locations = [
+            { lat: 36.368443, lng: 127.361919 },
+            { lat: 36.371354, lng: 127.358271 },
+            { lat: 36.366761, lng: 127.357136 },
+            { lat: 36.373427, lng: 127.359050 },
+            { lat: 36.373452, lng: 127.365332 }
+        ];
 
-    //         marker.addListener('click', function(e) {
-    //             infoWindow.open(map);
-    //             infoWindow.setContent(this.text);
-    //             infoWindow.setPosition(this.getPosition())
-    //         });
+        for (var l in locationCnt) {
+            var infoWindow = new google.maps.InfoWindow({
+                map: map
+            });
+            infoWindow.setContent(locationCnt[l] + "대");
+            infoWindow.setPosition(locations[l]);
+        }
 
-    //         return marker;
-    //     });
 
-    //     for (var i = 0; i < markers.length; i++) {
-    //         markers[i].setOptions({
-    //             map: map,
-    //             visible: true
-    //         });
-    //     }
-
-    // });
+    });
 }
 
 function appendRow(inRanking, inEmail, inPts) {
