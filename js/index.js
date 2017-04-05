@@ -21,10 +21,16 @@ function createMap() {
         var users = snapshot.val();
 
         var cnt = 1;
+        var tableRows = [];
 
         for (var u in users) {
-            appendRow(cnt++, users[u].email.substring(0, 4) + "**", users[u].point);
+            tableRows.push({ "email": users[u].email.substring(0, 4) + "**", "point": users[u].point });
         }
+
+        tableRows = tableRows.sort(function(a, b) { return (a.point < b.point) ? 1 : ((b.point < a.point) ? -1 : 0); });
+
+        for (var t in tableRows)
+            appendRow(cnt++, tableRows[t].email, tableRows[t].point);
 
     });
 
