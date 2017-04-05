@@ -8,7 +8,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="google" content="notranslate">
     <meta name="description" content="외부인 문제! 이젠 해결해주세요!">
-    <meta name="author" content="kixlab">
+    <meta name="author" content="kaist">
     <meta property="og:image" content="img/rally_brand.png" />
     <meta property="og:description" content="외부인 문제! 이젠 해결해주세요!" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -19,6 +19,7 @@
     <title>아, 쫌! 외부인</title>
 
     <link href="css/kube.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" />
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap theme -->
@@ -99,6 +100,11 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
+    <style>
+        .user-info {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -114,6 +120,7 @@
                 <img alt="Rally" src="img/achome_beta_brand.png" style="height: 100%;" />
             </a>
         </div>
+        <h5 class="user-info navbar-text" style="color:gray;float:right;"></h5>
         <nav class="collapse navbar-collapse rally-navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="./report.html">불법주차 신고하기</a></li>
@@ -122,7 +129,6 @@
         </nav>
     </header>
     <!--/nav bar-->
-
 
     <!-- Introduction -->
     <div>
@@ -138,30 +144,35 @@
                 </div>
             </div>
             <div class="container" style="word-break: break-all; animation: smooth-entry-btn 1.5s">
-                <!--<h3 style="text-align: center; margin: 10px 0 20px 0;">“아, 쫌! 인터넷 느리다는 소리 좀 안 들리게 좀 해주세요!"</h3>-->
-                <p style="text-align: center;">불법주차 때문에 불편함을 느끼신적 있으신가요?<br> 카대전에 불편함을 적은 적이 있나요? </p>
                 <p>
-                    학교는 중복되고 산발된 제보에 집행력을 집중하지 못합니다.<br> 정리되지 않은 정보로 문제 원인을 정확히 찾아내지 못합니다. [아, 쫌!]은 인터넷 상황의 정확한 이해, 문제의 원인 파악, 해결과 피드백을 한 플랫폼에서 지원합니다.
+                    [아, 쫌!]에선 학우들이 자발적으로 불법주차에 대한 자료를 모아 불법주차의 심각성을 입증해내는 플랫폼입니다<br>모인 자료는 이후 총학에서 공식적으로 민원을 쓸 때 강력한 증거자료가 됩니다.
                 </p>
                 <p style="font-style: italic;text-align: center;">
-                    <br>[아, 쫌!]은 학교가 우리의 목소리를 하나로 모아 줄 확성기입니다. 많은 목소리가 모일수록 학교가 귀를 귀울입니다.<br>
+                    <br>[아, 쫌!]은 우리의 목소리를 하나로 모아 줄 확성기입니다. 많은 목소리가 모일수록 학교가 귀를 귀울입니다.<br>
                 </p>
             </div>
             <div class="container" style="text-align: center; animation: smooth-entry-btn 1.5s">
                 <a href="./report.html" type="button" class="btn btn-default btn-block" style="margin: 15px 0">불법주차 신고하기</a>
             </div>
-            <div class="container logo-container" style="text-align: center; animation: smooth-entry-btn 2s">
-                <!--<a href="https://kixlab.org"><img src="img/KIXLAB_full_light_hr_nobg.png" /></a>-->
-                <a href="https://student.kaist.ac.kr"><img src="img/KAIST_USC.png" /></a>
-            </div>
 
-            <div class="container" style="margin-top:20px;">
+            <div class="container">
                 <div id="loading"></div>
-                <p id="today">실시간 교내 주차지도</p>
-                <div id="map"></div>
-
-                <div>
-                    이번 주 Ranking board
+                <div class="row">
+                    <div class="col-sm-5">
+                        <!--현재 위치-->
+                        <h4>이번 주 Ranking board</h4>
+                        <p id="loc-msg"></p>
+                        <div id="loading"></div>
+                        <div class="building-list-container">
+                            <table class="building-list table table-hover" style="margin-top: 15px;">
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <h4 id="today"><i class="fa fa-car" aria-hidden="true"></i> 실시간 교내 주차지도</h4>
+                        <div id="map"></div>
+                    </div>
                 </div>
 
                 <div>

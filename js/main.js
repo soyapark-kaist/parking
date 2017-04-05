@@ -148,8 +148,19 @@ function sendFileToCloudVision(inUrl) {
     });
 }
 
+function verifyLogin() {
+    // Check whether the user is authenticated
+    var user = firebase.auth().currentUser;
+    if (!user) {
+        localStorage.setItem("callback", "./turker.html");
+        window.location.replace("./login.html");
+    }
+}
+
 
 function correctPlate() {
+    verifyLogin();
+
     var pRef = firebase.database().ref("images/" + currentImg);
 
     pRef.once("value").then(function(snapshot) {
@@ -174,6 +185,8 @@ function correctPlate() {
 
 
 function updatePlate(inValue) {
+    verifyLogin();
+
     var pRef = firebase.database().ref("images/" + currentImg);
 
     pRef.update({

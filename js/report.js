@@ -1,6 +1,14 @@
 var center;
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Check whether the user is authenticated
+    var user = firebase.auth().currentUser;
+    if (!user) {
+        $("#footer").hide();
+        $("#login-btn").show();
+        localStorage.setItem("callback", "./report.html");
+    }
+
     var imagesList = document.getElementById('images'),
         textInput = document.getElementById('text'),
         sendButton = document.getElementById('send'),
