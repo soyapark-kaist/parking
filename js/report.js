@@ -2,12 +2,18 @@ var center;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Check whether the user is authenticated
-    var user = firebase.auth().currentUser;
-    if (!user) {
-        $("#footer").hide();
-        $("#login-btn").show();
-        localStorage.setItem("callback", "./report.html");
-    }
+    firebase.auth().onAuthStateChanged(function(user) {
+        debugger;
+        if (user) {
+            $("#footer").show();
+            $("#login-btn").hide();
+        } else {
+            $("#footer").hide();
+            $("#login-btn").show();
+            localStorage.setItem("callback", "./report.html");
+        }
+
+    });
 
     var imagesList = document.getElementById('images'),
         textInput = document.getElementById('text'),
@@ -72,6 +78,8 @@ document.addEventListener('DOMContentLoaded', function() {
             logPicture(fileArray[0].id, 0, fileArray.length);
             return;
         }
+
+        incrementPoints(3);
 
         var metadata = {
             'contentType': file.type,

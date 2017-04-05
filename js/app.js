@@ -42,3 +42,12 @@ function showUser() {
         $(".user-info").show();
     }
 }
+
+function incrementPoints(inPts) {
+    var databaseRef = firebase.database().ref('users').child(firebase.auth().currentUser.uid).child('point');
+
+    databaseRef.transaction(function(searches) {
+        return (searches || 0) + inPts;
+    });
+
+}

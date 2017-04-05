@@ -18,7 +18,7 @@ var questions = [];
 
 $(function() {
 
-
+    toggleLoading(".loading", true);
     var playersRef = firebase.database().ref('images/');
     // Attach an asynchronous callback to read the data at our posts reference
     playersRef.once("value").then(function(snapshot) {
@@ -58,6 +58,8 @@ function fetchQuestion() {
             //load text from db
             loadText(currentImg);
         }
+
+        toggleLoading(".loading", false);
     });
 
 }
@@ -121,8 +123,9 @@ function sendFileToCloudVision(inUrl) {
                     var errorMessage = value["ParsedTextFileName"];
                     var errorDetails = value["ErrorDetails"];
 
+                    var v_normal = /[^0-9가-힣]/g;
                     console.log(parsedText);
-                    $('#results').text(parsedText);
+                    $('#results').text(parsedText.replace(v_normal, ''));
 
                     var textOverlay = value["TextOverlay"];
                     var pageText = '';
@@ -165,12 +168,16 @@ function correctPlate() {
 
     pRef.once("value").then(function(snapshot) {
         pRef.update({
+            "text": snapshot.val().text ? snapshot.val().text : $("#results").text(),
             "status": snapshot.val().status + 1,
             "time": new Date().toString()
         }, function(error) {
             if (error) {
                 console.log(error);
             } else {
+                debugger;
+                incrementPoints(1);
+
                 alert("다음 문제로 넘어갑니다");
                 fetchQuestion();
                 // go to next question. 
@@ -197,6 +204,9 @@ function updatePlate(inValue) {
         if (error) {
             console.log(error);
         } else {
+            debugger;
+            incrementPoints(1);
+
             alert("다음 문제로 넘어갑니다");
             fetchQuestion();
             // go to next question. 
