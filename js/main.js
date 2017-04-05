@@ -193,6 +193,14 @@ function correctPlate() {
 
 
 function updatePlate(inValue) {
+    var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (isSafari && $("input[name='answer']:checked").length == 0) {
+        alert("번호판의 값을 적어주세요");
+        $("input[name='answer']").focus();
+        // e.preventDefault();
+        return false;
+    }
+
     verifyLogin();
 
     var pRef = firebase.database().ref("images/" + currentImg);
