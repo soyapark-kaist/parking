@@ -120,9 +120,18 @@
                 <img height="150" src="img/2.jpg" />
                 <ul id='images'></ul>
                 <div id='footer' style="display:none;">
-                    <p>한 번에 최대 5장까지 업로드 가능합니다</p>
-                    <input type="file" class="btn btn-primary" id="file" name="file" accept="image/*;capture=camera" capture multiple/>
-                    <div style="color: gray"><i class="fa fa-map-marker" aria-hidden="true"></i> 위치정보 수집</div>
+                    <div class="row">
+                        <div class="col-sm-6" style="margin-bottom: 15px;">
+                            <p><i class="fa fa-camera" aria-hidden="true"></i> 차량 촬영</p>
+                            <input type="file" class="btn btn-primary" id="file" name="file" accept="image/*;capture=camera" capture multiple/>
+                        </div>
+                        <div class="col-sm-6" id="upload">
+                            <p><i class="fa fa-picture-o" aria-hidden="true"></i> 업로드하기</p>
+                            <input type="file" class="btn btn-primary" id="file" name="file" accept="image/*;capture=camera" capture multiple/>한 번에 최대 5장까지 업로드 가능합니다
+                        </div>
+                    </div>
+
+
                     <div class="loading"></div>
                     <div id="preview"></div>
                 </div>

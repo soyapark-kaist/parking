@@ -63,6 +63,12 @@ function checkLocation(e) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    if (userAgent.match(/Android/i)) {
+        $("#upload").hide();
+    }
+
     // Check whether the user is authenticated
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
@@ -79,9 +85,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var imagesList = document.getElementById('images'),
         textInput = document.getElementById('text'),
         sendButton = document.getElementById('send'),
-        file = document.getElementById('file');
+        file = document.getElementById('file'),
+        upload = document.getElementById('upload');
 
     var files;
+
 
     // Handle file uploads to Storage
     function handleFileSelect(e) {
@@ -89,6 +97,8 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
 
         files = e.target.files;
+        fileArray = [];
+
         var i, file;
         for (i = 0; file = files[i]; i++) {
             //Only pics
@@ -208,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (inIndex == inLength) {
             alert('신고 되었습니다!');
             $(".loading").toggleClass("loader");
-            window.location.replace("./report.html");
+            // window.location.replace("./report.html");
 
             return;
         }
@@ -242,11 +252,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return text;
     }
 
-    if (window.File && window.FileList && window.FileReader)
+    if (window.File && window.FileList && window.FileReader) {
         file.addEventListener('change', handleFileSelect, false);
-    else alert("해당 브러우저에서 지원되지 않습니다");
+        upload.addEventListener('change', handleFileSelect, false);
+    } else alert("해당 브러우저에서 지원되지 않습니다");
 
     file.addEventListener('click', checkLocation, false);
+    upload.addEventListener('click', checkLocation, false);
 });
 
 function appendRow(inID, inStreet, cnt) {
