@@ -149,8 +149,8 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    var max_width = 250;
-    var max_height = 250;
+    var max_width = 500;
+    var max_height = 500;
 
     function resizeMe(img) {
 
